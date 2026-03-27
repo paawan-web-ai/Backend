@@ -10,10 +10,11 @@ async function registerController(req, res) {
 
   if (isUserAlreadyExists) {
     const isEmailTaken = isUserAlreadyExists.email === email;
-    const isUsernameTaken = isUserAlreadyExists.username === username;
+    const isNameTaken = isUserAlreadyExists.username === username;
 
-    let message = "Registration failed: ";
-    if (isEmailTaken && isUsernameTaken) {
+    let message = "Registration Failed";
+
+    if (isEmailTaken && isNameTaken) {
       message += "Both Email and Username are already in user.";
     } else if (isEmailTaken) {
       message += "This Email is already registered";
@@ -43,22 +44,24 @@ async function registerController(req, res) {
   res.cookie("jwt_token", token);
 
   res.status(201).json({
-    message: "user registered",
+    message: "User registered",
     user,
     token,
   });
 }
 
 async function loginController(req, res) {
-  const { identifier, password } = req.body;
+  const { identifier, username, email, password } = req.body;
+
+  const loginValue = identifier || username || email;
 
   const user = await userModel.findOne({
-    $or: [{ username: identifier }, { email: identifier }],
+    $or: [{ username: loginValue }, { email: loginValue }],
   });
 
   if (!user) {
     return res.status(404).json({
-      message: "User Not Found!",
+      message: "User Not Found",
     });
   }
 
@@ -66,7 +69,7 @@ async function loginController(req, res) {
 
   if (!ispasswordValid) {
     return res.status(404).json({
-      message: "Password Invalid!",
+      message: "Password Invalid",
     });
   }
 
@@ -81,13 +84,14 @@ async function loginController(req, res) {
   res.cookie("token", token);
 
   res.status(200).json({
-    message: "User LoggedIn Successfully",
+    message: "user loggedIn sucessfully",
     user: {
       username: user.username,
       email: user.email,
     },
   });
 }
+
 module.exports = {
   registerController,
   loginController,
