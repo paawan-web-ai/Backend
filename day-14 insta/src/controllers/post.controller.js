@@ -10,24 +10,7 @@ const imagekit = new ImageKit({
 async function createPostController(req, res) {
   console.log(req.body, req.file);
 
-  const token = req.cookies.token;
-
-  if (!token) {
-    return res.status(401).json({
-      message: "Token not provided , unauthorized access",
-    });
-  }
-
-  let decoded = null;
-
-  try {
-    decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log(decoded);
-  } catch (error) {
-    return res.status(401).json({
-      message: "Unauthorized User",
-    });
-  }
+ 
 
   const file = await imagekit.files.upload({
     file: await toFile(Buffer.from(req.file.buffer), "file"),
@@ -47,24 +30,8 @@ async function createPostController(req, res) {
 }
 
 async function getPostController(req, res) {
-  const token = req.cookies.token;
-  // to read token's data
-
-  if (!token) {
-    return res.status(401).json({
-      message: "unAuthorized Access",
-    });
-  }
-
-  let decoded = null;
-  try {
-    decoded = jwt.verify(token, process.env.JWT_SECRET);
-  } catch (err) {
-    return res.status(401).json({
-      message: "Token invalid",
-    });
-  }
-  const userId = decoded.id;
+  
+  const userId = ;
 
   const posts = await postModel.find({
     user: userId,
@@ -77,26 +44,11 @@ async function getPostController(req, res) {
 }
 
 async function getPostDetails(req, res) {
-  const token = req.cookies.token;
+ 
 
-  if (!token) {
-    return res.status(401).json({
-      message: "unAuthorized Access",
-    });
-  }
-
-  let decoded;
-
-  try {
-    decoded = jwt.verify(token, process.env.JWT_SECRET);
-  } catch (err) {
-    return res.status(401).json({
-      message: "Invalid token",
-    });
-  }
-
-  const userID = decoded.id;
+  const userID = ;
   const postID = req.params.postID;
+
   const postdetails = await postModel.findById(postID);
 
   if (!postdetails) {
@@ -113,7 +65,7 @@ async function getPostDetails(req, res) {
     });
   }
 
-  return res.status(200).json({
+  res.status(200).json({
     message: "post fetched successfully.",
     postdetails,
   });
