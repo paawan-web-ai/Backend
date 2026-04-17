@@ -1,4 +1,5 @@
 const postModel = require("../models/post.model");
+const identifyUser = require("../middlewares/auth.middleware");
 const ImageKit = require("@imagekit/nodejs");
 const { toFile } = require("@imagekit/nodejs");
 const jwt = require("jsonwebtoken");
@@ -10,8 +11,6 @@ const imagekit = new ImageKit({
 async function createPostController(req, res) {
   console.log(req.body, req.file);
 
- 
-
   const file = await imagekit.files.upload({
     file: await toFile(Buffer.from(req.file.buffer), "file"),
     fileName: "Test",
@@ -21,7 +20,7 @@ async function createPostController(req, res) {
   const post = await postModel.create({
     caption: req.body.caption,
     imgUrl: file.url,
-    user: decoded.id,
+    user: requser.id,
   });
   res.status(201).json({
     message: "post created successfully",
@@ -30,8 +29,7 @@ async function createPostController(req, res) {
 }
 
 async function getPostController(req, res) {
-  
-  const userId = ;
+  const userId = req.user.id;
 
   const posts = await postModel.find({
     user: userId,
@@ -44,9 +42,7 @@ async function getPostController(req, res) {
 }
 
 async function getPostDetails(req, res) {
- 
-
-  const userID = ;
+  const userID = req.user.id;
   const postID = req.params.postID;
 
   const postdetails = await postModel.findById(postID);
