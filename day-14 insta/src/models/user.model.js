@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema({
     default:
       "https://ik.imagekit.io/4gzxwrawt/NicePng_watsapp-icon-png_9332131.png",
   },
+
 });
 const userModel = mongoose.model("user", userSchema);
 

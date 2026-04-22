@@ -95,8 +95,23 @@ async function loginController(req, res) {
 
 async function getController(req, res) {
   const token = req.cookies.token;
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+  if (!token) {
+    return res.status(401).json({ message: "No token provided" });
+  }
+
+  let decoded;
+  try {
+    decoded = jwt.verify(token, process.env.JWT_SECRET);
+  } catch (err) {
+    return res.status(401).json({ message: "Invalid or expired token" });
+  }
+
   const user = await userModel.findById(decoded.id);
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
 
   res.json({
     name: user.username,
@@ -104,8 +119,14 @@ async function getController(req, res) {
   });
 }
 
+async function logoutController(req, res) {
+  res.clearCookie("token");
+  res.json({ message: "Logged out successfully" });
+}
+
 module.exports = {
   registerController,
   loginController,
   getController,
+  logoutController,
 };
