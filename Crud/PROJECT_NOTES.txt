@@ -1,0 +1,150 @@
+================================================================================
+                         CRUD BACKEND - PROJECT NOTES
+================================================================================
+Project Name: crud
+Version: 1.0.0
+Tech Stack: Node.js, Express.js, MongoDB, Mongoose, ImageKit, Multer
+================================================================================
+
+PROJECT STRUCTURE
+-----------------
+Backend/Crud/
+├── server.js              # Entry point
+├── package.json           # Dependencies
+├── .env                   # Environment variables
+├── src/
+│   ├── app.js             # Express app & API routes
+│   ├── config/
+│   │   └── database.js    # MongoDB connection
+│   ├── models/
+│   │   └── post.model.js  # Mongoose schema
+│   └── service/
+│       └── service.js     # ImageKit service
+
+================================================================================
+DEPENDENCIES
+-----------------
+1. @imagekit/nodejs  ^7.5.0    - Image upload/management
+2. dotenv            ^17.4.2   - Environment variables
+3. express           ^5.2.1    - Web framework
+4. mongoose          ^9.5.0    - MongoDB ODM
+5. multer            ^2.1.1    - File upload handling
+
+================================================================================
+ENVIRONMENT VARIABLES (.env)
+-----------------
+- MONGO_URI     : MongoDB connection string
+- IMG_KEY       : ImageKit private key
+
+================================================================================
+DATABASE SCHEMA (Post Model)
+-----------------
+Collection: posts
+
+Fields:
+┌─────────────┬────────────────────────────────────────────────────────────────┐
+│ Field       │ Type/Details                                                   │
+├─────────────┼────────────────────────────────────────────────────────────────┤
+│ title       │ String                                                         │
+│ description │ String                                                         │
+│ imgUrl      │ String (default: fallback ImageKit URL)                        │
+└─────────────┴────────────────────────────────────────────────────────────────┘
+
+================================================================================
+API ENDPOINTS
+-----------------
+
+1. CREATE POST
+   Route: POST /api/posts
+   Body: multipart/form-data
+     - title (string)
+     - description (string)
+     - image (file) - uploaded via multer
+   Process:
+     1. Multer captures image in memory
+     2. ImageKit uploads image to cloud
+     3. Post created in MongoDB
+   Response: 201 { message, post }
+
+2. GET ALL POSTS
+   Route: GET /api/posts
+   Response: 200 { message, posts: [Post] }
+
+3. DELETE POST
+   Route: DELETE /api/posts/:id
+   Response: 200 { message }
+
+4. UPDATE POST (PATCH)
+   Route: PATCH /api/posts/:id
+   Body: { description: string }
+   Response: 200 { message }
+
+================================================================================
+IMAGEKIT SERVICE
+-----------------
+File: src/service/service.js
+
+Function: createImg(buffer)
+- Accepts: Buffer (from multer)
+- Uses: @imagekit/nodejs SDK
+- Returns: ImageKit upload response
+
+Note: Uses toFile() to convert buffer for ImageKit upload
+
+================================================================================
+SERVER CONFIGURATION
+-----------------
+File: server.js
+
+Port: 3000
+Startup Sequence:
+  1. Start Express server on port 3000
+  2. Connect to MongoDB
+
+Log Output: "server:3000 is running.." -> "connected to db"
+
+================================================================================
+MIDDLEWARE STACK
+-----------------
+1. express.json() - Parse JSON bodies
+2. multer.memoryStorage() - Store uploaded files in memory
+
+================================================================================
+FLOW DIAGRAM
+-----------------
+
+CREATE POST FLOW:
+┌──────────┐     ┌─────────┐     ┌────────────┐     ┌──────────┐     ┌────────┐
+│  Client  │────>│  Multer │────>│ ImageKit   │────>│ MongoDB  │────>│ Client │
+│ (Request)│     │ (Upload)│     │ (Cloud IMG)│     │ (Save)   │     │(Response)
+└──────────┘     └─────────┘     └────────────┘     └──────────┘     └────────┘
+
+================================================================================
+KEY OBSERVATIONS / NOTES
+-----------------
+1. Image upload is handled but imgUrl in POST is not being set from ImageKit
+   response (currently only title, description, imgUrl from req.body)
+
+2. Default image URL is set in schema if imgUrl not provided
+
+3. DELETE endpoint uses findOneAndDelete with just id (should use { _id: id })
+
+4. No error handling in routes - production should add try-catch blocks
+
+5. No validation on schema fields (all String types, no required fields)
+
+================================================================================
+POTENTIAL IMPROVEMENTS
+-----------------
+1. Add proper error handling (try-catch in all routes)
+2. Add input validation (Joi, express-validator, or Mongoose validators)
+3. Fix imgUrl assignment in POST route (use ImageKit response URL)
+4. Add authentication/authorization
+5. Add pagination for GET /api/posts
+6. Add proper logging (winston, morgan)
+7. Add API rate limiting
+8. Add request validation middleware
+
+================================================================================
+Generated: 2026-04-23
+================================================================================
