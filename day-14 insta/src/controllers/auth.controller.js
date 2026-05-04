@@ -1,10 +1,9 @@
 const userModel = require("../models/user.model");
-// const crypto = require("crypto");
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 async function registerController(req, res) {
-  const { email, username, password, bio, profileImage } = req.body;
+  const { username, email, password, bio, profileImage } = req.body;
 
   const isUserAlreadyExists = await userModel.findOne({
     $or: [{ username }, { email }],
@@ -13,8 +12,8 @@ async function registerController(req, res) {
   if (isUserAlreadyExists) {
     return res.status(409).json({
       message:
-        "User already exists" +
-        (isUserAlreadyExists.email == email
+        "user already exists " +
+        (isUserAlreadyExists.email === email
           ? "email already exists"
           : "username already exists"),
     });
@@ -33,17 +32,19 @@ async function registerController(req, res) {
   const token = jwt.sign(
     {
       id: user._id,
+      username: user.username,
     },
     process.env.JWT_SECRET,
     { expiresIn: "1d" },
   );
 
   res.cookie("token", token);
+
   res.status(201).json({
     message: "user registered successfully",
     user: {
-      email: user.email,
       username: user.username,
+      email: user.email,
       bio: user.bio,
       profileImage: user.profileImage,
     },
@@ -52,23 +53,21 @@ async function registerController(req, res) {
 
 async function loginController(req, res) {
   const { username, email, password } = req.body;
+
   const user = await userModel.findOne({
     $or: [
       {
-        //condition
-
-        username: username /* a */,
+        username: username,
       },
       {
-        //condition
-
-        email: email /* undefiend */,
+        email: email,
       },
     ],
   });
+
   if (!user) {
     return res.status(404).json({
-      message: "user not found",
+      message: "User not Found",
     });
   }
 
@@ -76,12 +75,14 @@ async function loginController(req, res) {
 
   if (!isPasswordValid) {
     return res.status(404).json({
-      message: "password invalid",
+      message: "password Invalid",
     });
   }
+
   const token = jwt.sign(
     {
       id: user._id,
+      username: user.username,
     },
     process.env.JWT_SECRET,
     { expiresIn: "1d" },
@@ -90,7 +91,7 @@ async function loginController(req, res) {
   res.cookie("token", token);
 
   res.status(200).json({
-    message: "user loggedIn successfully",
+    message: "User loggedIn Successfully",
     user: {
       username: user.username,
       email: user.email,

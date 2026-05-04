@@ -1,15 +1,15 @@
 const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema({
+const userShema = new mongoose.Schema({
   username: {
     type: String,
-    unique: [true, "User name already exists"],
-    required: [true, "User name is required"],
+    unique: [true, "username already exists"],
+    required: [true, "username is required"],
   },
   email: {
     type: String,
-    unique: [true, "Email already exists"],
-    required: [true, "Email is required"],
+    unique: [true, "email already exists"],
+    required: [true, "email is required"],
   },
   password: {
     type: String,
@@ -19,10 +19,9 @@ const userSchema = new mongoose.Schema({
   profileImage: {
     type: String,
     default:
-      "https://ik.imagekit.io/4gzxwrawt/NicePng_watsapp-icon-png_9332131.png",
+      "https://ik.imagekit.io/iz015lb8g/847969.png?updatedAt=1777045017795",
   },
-
 });
-const userModel = mongoose.model("user", userSchema);
+const userModel = mongoose.model("user", userShema);
 
 module.exports = userModel;

@@ -5,22 +5,23 @@ async function identifyUser(req, res, next) {
 
   if (!token) {
     return res.status(401).json({
-      message: "Token not provided , unauthorized access",
+      message: "Token not provided, Unauthorized access",
     });
   }
 
-  let decoded = null;
+  let decoded;
 
   try {
     decoded = jwt.verify(token, process.env.JWT_SECRET);
     console.log(decoded);
-  } catch (error) {
+  } catch (err) {
     return res.status(401).json({
       message: "Unauthorized User",
     });
   }
 
   req.user = decoded;
+
   next();
 }
 

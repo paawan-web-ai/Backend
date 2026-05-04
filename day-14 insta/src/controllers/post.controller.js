@@ -1,14 +1,13 @@
 const postModel = require("../models/post.model");
 const ImageKit = require("@imagekit/nodejs");
 const { toFile } = require("@imagekit/nodejs");
-const jwt = require("jsonwebtoken");
 
 const imagekit = new ImageKit({
-  privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
+  privateKey: process.env.IMG_KEY,
 });
 
 async function createPostController(req, res) {
-  console.log(req.body, req.file);
+  //   console.log(req.body, req.file);
 
   const file = await imagekit.files.upload({
     file: await toFile(Buffer.from(req.file.buffer), "file"),
@@ -21,8 +20,9 @@ async function createPostController(req, res) {
     imgUrl: file.url,
     user: req.user.id,
   });
+
   res.status(201).json({
-    message: "post created successfully",
+    message: "Post created successfully",
     post,
   });
 }
@@ -41,27 +41,28 @@ async function getPostController(req, res) {
 }
 
 async function getPostDetails(req, res) {
-  const userID = req.user.id;
-  const postID = req.params.postID;
+  const userId = req.user.id;
+  const postId = req.params.postId;
 
-  const postdetails = await postModel.findById(postID);
+  const postdetails = await postModel.findById(postId);
 
   if (!postdetails) {
     return res.status(404).json({
-      message: "post not found.",
+      message: "Post not found",
     });
   }
-
-  const isValidUser = postdetails.user.toString() === userID;
+  // postdetails.user.toString() = the owner of the post
+  // userId = the person who is currently logged in
+  const isValidUser = postdetails.user.toString() === userId;
 
   if (!isValidUser) {
     return res.status(403).json({
-      message: "forbidden content.",
+      message: "Forbidden content.",
     });
   }
 
   res.status(200).json({
-    message: "post fetched successfully.",
+    message: "Post fetched successfully",
     postdetails,
   });
 }

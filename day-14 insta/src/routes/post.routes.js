@@ -6,8 +6,8 @@ const upload = multer({ storage: multer.memoryStorage() });
 const { identifyUser } = require("../middlewares/auth.middleware");
 
 /*
--POST /api/posts [protected]
--req.body = {caption , image-file}
+-POST /api/post [protected]
+-req.body={caption,image-file}
 */
 postRouter.post(
   "/",
@@ -17,16 +17,15 @@ postRouter.post(
 );
 
 /*
- Get /api/posts/[protected]
- */
+-GET /api/post/[protected]
+*/
 
 postRouter.get("/", identifyUser, postController.getPostController);
 
 /*
-GET / api/posts/details/:postid
-- return an detail about specific post with the id . also check whether the post belongs to the user that the request come from
- */
+-GET /api/posts/details/:postid
+-return an detail about specific post with the id. also check whether the post belongs to the user that the reques come from
+*/
 
-postRouter.get("/details/:postID", identifyUser, postController.getPostDetails);
-
+postRouter.get("/details/:postId", identifyUser, postController.getPostDetails);
 module.exports = postRouter;
