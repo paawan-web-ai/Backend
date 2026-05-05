@@ -1,6 +1,7 @@
 const postModel = require("../models/post.model");
 const ImageKit = require("@imagekit/nodejs");
 const { toFile } = require("@imagekit/nodejs");
+const likeModel = require("../models/like.model");
 
 const imagekit = new ImageKit({
   privateKey: process.env.IMG_KEY,
@@ -67,8 +68,31 @@ async function getPostDetails(req, res) {
   });
 }
 
+async function likePostController(req, res) {
+  const username = req.user.username;
+  const postId = req.params.postId;
+
+  const post = await postModel.findById(postId);
+
+  if (!post) {
+    return res.status(404).json({
+      message: "post not found",
+    });
+  }
+
+  const like = await likeModel.create({
+    post: postId,
+    user: username,
+  });
+
+  res.status(200).json({
+    message: "post liked Successfully",
+    like,
+  });
+}
 module.exports = {
   createPostController,
   getPostController,
   getPostDetails,
+  likePostController,
 };

@@ -15,7 +15,7 @@ userRouter.post(
 );
 
 /*
-@route POST /api/user/follow/:userid
+@route POST /api/user/unfollow/:userid
 @description unfollow a user
 @access Private
 */

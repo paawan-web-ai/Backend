@@ -9,6 +9,7 @@ app.use(cookieParser());
 const authRouter = require("./routes/auth.routes");
 const postRouter = require("./routes/post.routes");
 const userRouter = require("./routes/user.routes");
+
 /* using routes */
 app.use("/api/auth", authRouter);
 app.use("/api/post", postRouter);
