@@ -69,7 +69,81 @@ async function unfollowUserController(req, res) {
   });
 }
 
+/*
+GET ALL PENDING REQUESTS
+*/
+async function getPendingController(req, res) {
+  const followeeUsername = req.user.username;
+
+  const pendingRequests = await followModel.find({
+    followee: followeeUsername,
+    status: "pending",
+  });
+
+  if (pendingRequests.length === 0) {
+    return res.status(404).json({
+      message: "No pending follow requests found",
+    });
+  }
+
+  return res.status(200).json({
+    message: "Pending follow requests fetched successfully",
+    follow: pendingRequests,
+  });
+}
+
+/*
+ACCEPT REQUEST
+*/
+async function acceptRequestController(req, res) {
+  const requestId = req.params.requestId;
+
+  const followRequest = await followModel.findById(requestId);
+
+  if (!followRequest) {
+    return res.status(404).json({
+      message: "Follow request not found",
+    });
+  }
+
+  followRequest.status = "accepted";
+
+  await followRequest.save();
+
+  return res.status(200).json({
+    message: "Follow request accepted",
+    follow: followRequest,
+  });
+}
+
+/*
+REJECT REQUEST
+*/
+async function rejectRequestController(req, res) {
+  const requestId = req.params.requestId;
+
+  const followRequest = await followModel.findById(requestId);
+
+  if (!followRequest) {
+    return res.status(404).json({
+      message: "Follow request not found",
+    });
+  }
+
+  followRequest.status = "rejected";
+
+  await followModel.findByIdAndDelete(followRequest._id);
+
+  return res.status(200).json({
+    message: "Follow request rejected",
+    follow: followRequest,
+  });
+}
+
 module.exports = {
   followUserController,
   unfollowUserController,
+  getPendingController,
+  acceptRequestController,
+  rejectRequestController,
 };

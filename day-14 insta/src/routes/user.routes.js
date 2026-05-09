@@ -24,4 +24,23 @@ userRouter.post(
   identifyUser,
   userController.unfollowUserController,
 );
+
+//pending request
+
+userRouter.get("/pending", identifyUser, userController.getPendingController);
+
+// accept request
+userRouter.post(
+  "/accept/:requestId",
+  identifyUser,
+  userController.acceptRequestController,
+);
+
+// reject request
+userRouter.post(
+  "/reject/:requestId",
+  identifyUser,
+  userController.rejectRequestController,
+);
+
 module.exports = userRouter;
