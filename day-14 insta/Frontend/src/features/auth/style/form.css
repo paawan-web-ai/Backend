@@ -1,0 +1,48 @@
+main {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-container {
+  height: -moz-fit-content;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.form-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 400px;
+}
+.form-container form input {
+  border: none;
+  outline: none;
+  padding-inline: 1.5rem;
+  padding-block: 0.7rem;
+  border-radius: 1rem;
+}
+.form-container form button {
+  border: none;
+  outline: none;
+  padding-inline: 1.5rem;
+  padding-block: 0.7rem;
+  border-radius: 1rem;
+  background-color: #bd0c23;
+  color: whitesmoke;
+  cursor: pointer;
+}
+.form-container .link {
+  text-align: center;
+  color: whitesmoke;
+  cursor: pointer;
+  text-decoration: none;
+}
+.form-container .link a {
+  text-decoration: none;
+  color: #bd0c23;
+}/*# sourceMappingURL=form.css.map */
