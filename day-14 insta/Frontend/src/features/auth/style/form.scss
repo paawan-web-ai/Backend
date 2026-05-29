@@ -12,6 +12,10 @@ main {
   flex-direction: column;
   gap: 1rem;
 
+  h1 {
+    color: whitesmoke;
+  }
+
   form {
     display: flex;
     flex-direction: column;

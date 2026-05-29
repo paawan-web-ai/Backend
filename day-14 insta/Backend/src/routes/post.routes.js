@@ -40,4 +40,6 @@ postRouter.post(
   postController.likePostController,
 );
 
+postRouter.get("/feed", identifyUser, postController.getFeedController);
+
 module.exports = postRouter;
