@@ -1,0 +1,27 @@
+import { getFeed } from "../services/post.api";
+import { useContext } from "react";
+import { PostContext } from "../post.context";
+
+export const usePost = () => {
+  const context = useContext(PostContext);
+
+  const { loading, setloading, post, setpost, feed, setfeed } = context;
+
+  const handleGetFeed = async () => {
+    setloading(true);
+    try {
+      const data = await getFeed();
+      setfeed(data.feedPost);
+    } catch (err) {
+      console.error("Feed request failed:", err);
+    } finally {
+      setloading(false);
+    }
+  };
+  return {
+    loading,
+    feed,
+    post,
+    handleGetFeed,
+  };
+};

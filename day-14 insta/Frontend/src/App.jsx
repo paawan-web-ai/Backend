@@ -2,14 +2,14 @@ import React from 'react'
 import AppRoutes from "./routes/AppRoutes"
 import "./style.scss"
 import { AuthProvider } from './features/auth/auth.context.jsx'
-import Feed from './features/post/pages/Feed.jsx'
-
+import { PostContextProvider } from './features/post/post.context.jsx'
 const App = () => {
   return (
     <div>
       <AuthProvider>
-        <AppRoutes />
-        <Feed />
+        <PostContextProvider>
+          <AppRoutes />
+        </PostContextProvider>
       </AuthProvider>
     </div>
   )

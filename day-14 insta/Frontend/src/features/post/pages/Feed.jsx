@@ -1,74 +1,40 @@
 // Feed.jsx
+import Post from "../components/Post";
 import "./Feed.scss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { usePost } from "../hooks/userPost";
+
 
 function Feed() {
-    const [liked, setLiked] = useState(false);
-    const [saved, setSaved] = useState(false);
+
+    const { feed, handleGetFeed, loading } = usePost()
+
+
+    useEffect(() => {
+        handleGetFeed()
+    }, [])
+
+    if (loading) {
+        return (<main><h1>Feed is Loading...</h1></main>)
+    }
+
+    if (!feed || feed.length === 0) {
+        return (<main><h1>No posts available</h1></main>)
+    }
+
+    console.log(feed)
 
     return (
-        <div className="feedPost">
-            <div className="postHeader">
-                <img
-                    src="https://i.pravatar.cc/150?img=12"
-                    alt="profile"
-                />
+        <div >
+            {feed.map((post) => (
+                <div key={post._id || post.id} className="feedItem">
+                    <Post
+                        post={post}
+                        user={post.user}
+                    />
 
-                <div className="userInfo">
-                    <h4>paawan_dev</h4>
-                    <p>Delhi, India</p>
                 </div>
-            </div>
-
-            <div className="postImage">
-                <img
-                    src="https://images.unsplash.com/photo-1506744038136-46273834b3fb"
-                    alt="post"
-                />
-            </div>
-
-            <div className="postActions">
-                <div className="leftActions">
-
-                    <span
-                        className={`icon`}
-                        onClick={() => setLiked(!liked)}
-
-                    >
-                        {liked ? "❤️" : "🤍"}
-
-                    </span>
-
-                    <span className="icon">💬</span>
-
-                    <span className="icon">📤</span>
-                </div>
-
-                <div className="rightActions">
-                    <span
-                        className="icon"
-                        onClick={() => setSaved(!saved)}
-                    >
-                        {saved ? "🔖" : "📑"}
-                    </span>
-                </div>
-            </div>
-
-            <div className="postContent">
-                <h5>2,341 likes</h5>
-
-                <p>
-                    <span>paawan_dev</span>
-                    Building my dream life one line of code at a time 🚀🔥
-                </p>
-
-                <small>View all 124 comments</small>
-
-                <div className="commentBox">
-                    <input type="text" placeholder="Add a comment..." />
-                    <button>Post</button>
-                </div>
-            </div>
+            ))}
         </div>
     );
 }
