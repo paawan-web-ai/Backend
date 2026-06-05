@@ -26,8 +26,15 @@ const Post = ({ user, post }) => {
             <div className="postActions">
                 <div className="leftActions">
                     <span
-                        className={`icon`}
-                        onClick={() => setLiked(!liked)}
+                        className={post.isLiked ? "Liked" : ""}
+                        onChange={() => {
+                            if (post.isLiked) {
+                                setLiked(true)
+                            } else {
+                                setLiked(false)
+                            }
+
+                        }}
                     >
                         {liked ? "❤️" : "🤍"}
                     </span>

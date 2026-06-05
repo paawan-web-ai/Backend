@@ -7,12 +7,24 @@ import { usePost } from "../hooks/userPost";
 
 function Feed() {
 
-    const { feed, handleGetFeed, loading } = usePost()
+    const { feed, handleGetFeed, loading, setfeed } = usePost()
 
 
     useEffect(() => {
         handleGetFeed()
     }, [])
+
+
+    const handleLiked = (id) => {
+        const updateFeed = feed.map((post) =>
+            post._id === id
+                ? { ...post, isLiked: !post.isLiked }
+                : post
+        )
+        setfeed(updateFeed)
+    }
+
+
 
     if (loading) {
         return (<main><h1>Feed is Loading...</h1></main>)
