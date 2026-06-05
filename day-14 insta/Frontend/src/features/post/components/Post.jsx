@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import "../pages/Feed.scss"
-const Post = ({ user, post }) => {
+const Post = ({ user, post, handleLiked }) => {
     const [liked, setLiked] = useState(false);
     const [saved, setSaved] = useState(false);
 
@@ -26,17 +26,10 @@ const Post = ({ user, post }) => {
             <div className="postActions">
                 <div className="leftActions">
                     <span
-                        className={post.isLiked ? "Liked" : ""}
-                        onChange={() => {
-                            if (post.isLiked) {
-                                setLiked(true)
-                            } else {
-                                setLiked(false)
-                            }
-
-                        }}
+                        className={`icon`}
+                        onClick={() => handleLiked(post._id)}
                     >
-                        {liked ? "❤️" : "🤍"}
+                        {post.isLiked ? "❤️" : "🤍"}
                     </span>
                     <span className="icon">💬</span>
                     <span className="icon">📤</span>

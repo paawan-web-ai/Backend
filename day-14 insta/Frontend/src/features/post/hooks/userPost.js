@@ -23,5 +23,6 @@ export const usePost = () => {
     feed,
     post,
     handleGetFeed,
+    setfeed,
   };
 };

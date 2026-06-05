@@ -43,6 +43,7 @@ function Feed() {
                     <Post
                         post={post}
                         user={post.user}
+                        handleLiked={handleLiked}
                     />
 
                 </div>
