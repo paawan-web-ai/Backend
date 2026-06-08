@@ -3,6 +3,7 @@ import Post from "../components/Post";
 import "./Feed.scss";
 import { useEffect, useState } from "react";
 import { usePost } from "../hooks/userPost";
+import Nav from "../../../shared/components/Nav";
 
 
 function Feed() {
@@ -37,7 +38,8 @@ function Feed() {
     console.log(feed)
 
     return (
-        <div >
+        <div className="feed-page">
+            <Nav />
             {feed.map((post) => (
                 <div key={post._id || post.id} className="feedItem">
                     <Post

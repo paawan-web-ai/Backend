@@ -38,7 +38,15 @@ async function registerController(req, res) {
     { expiresIn: "1d" },
   );
 
-  res.cookie("token", token);
+  const cookieOptions = {
+    httpOnly: true,
+    sameSite: "none",
+    secure: true,
+    path: "/",
+    maxAge: 24 * 60 * 60 * 1000,
+  };
+
+  res.cookie("token", token, cookieOptions);
 
   res.status(201).json({
     message: "user registered successfully",
@@ -89,7 +97,15 @@ async function loginController(req, res) {
     { expiresIn: "1d" },
   );
 
-  res.cookie("token", token);
+  const cookieOptions = {
+    httpOnly: true,
+    sameSite: "none",
+    secure: true,
+    path: "/",
+    maxAge: 24 * 60 * 60 * 1000,
+  };
+
+  res.cookie("token", token, cookieOptions);
 
   res.status(200).json({
     message: "User loggedIn Successfully",
