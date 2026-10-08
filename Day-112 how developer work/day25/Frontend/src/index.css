@@ -1,6 +1,6 @@
 * {
-  padding: 0;
   margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
@@ -9,16 +9,37 @@ body,
 #root {
   width: 100%;
   height: 100%;
-  background-color: #222;
-  color: white;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-button {
-  padding: 10px 20px;
-  margin-top: 1.5rem;
-  font-size: 1rem;
+body {
+  font-family: Arial, sans-serif;
+  background-color: rgb(20, 5, 21);
+  color: white;
+}
+
+div {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+div button {
+  padding: 10px 25px;
   border-radius: 10px;
+  border: 1px solid rgb(220, 14, 235);
+  background-color: rgb(35, 4, 38);
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+}
+div button:hover {
+  cursor: pointer;
+}
+div button:active {
+  scale: 0.9;
+  background-color: rgb(58, 6, 63);
 }

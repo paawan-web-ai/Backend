@@ -1,50 +1,90 @@
 import { FaceLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
 
 export const init = async ({ landmarkerRef, videoRef, streamRef }) => {
+  // Load MediaPipe
   const vision = await FilesetResolver.forVisionTasks(
     "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm",
   );
+
+  // Create Face Landmarker
   landmarkerRef.current = await FaceLandmarker.createFromOptions(vision, {
     baseOptions: {
       modelAssetPath:
-        "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/latest/face_landmarker.task",
+        "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task",
     },
+
     outputFaceBlendshapes: true,
+
     runningMode: "VIDEO",
+
     numFaces: 1,
   });
+
+  // Start camera
   streamRef.current = await navigator.mediaDevices.getUserMedia({
     video: true,
   });
+
   videoRef.current.srcObject = streamRef.current;
+
   await videoRef.current.play();
+
+  // Start detection
+  // detect();
 };
 
-export const detect = ({ landmarkerRef, videoRef, streamRef }) => {
-  if (!landmarkerRef.current || !videoRef.current) return;
+// ==========================================
+// Detect face expression
+// ==========================================
+
+export const detect = ({ landmarkerRef, videoRef, setExpression }) => {
+  if (!landmarkerRef.current || !videoRef.current) {
+    return;
+  }
 
   const results = landmarkerRef.current.detectForVideo(
     videoRef.current,
     performance.now(),
   );
+
+  // Check if face exists
   if (results.faceBlendshapes?.length > 0) {
     const blendshapes = results.faceBlendshapes[0].categories;
+
+    // Get individual scores
     const getScore = (name) =>
       blendshapes.find((b) => b.categoryName === name)?.score || 0;
+
     const smileLeft = getScore("mouthSmileLeft");
+
     const smileRight = getScore("mouthSmileRight");
+
     const jawOpen = getScore("jawOpen");
+
     const browUp = getScore("browInnerUp");
+
     const frownLeft = getScore("mouthFrownLeft");
+
     const frownRight = getScore("mouthFrownRight");
+
+    // Default expression
     let currentExpression = "Neutral";
+
+    // Happy
     if (smileLeft > 0.5 && smileRight > 0.5) {
       currentExpression = "Happy 😄";
-    } else if (jawOpen > 0.6 && browUp > 0.5) {
+    }
+
+    // Surprised
+    else if (jawOpen > 0.003 && browUp > 0.003) {
       currentExpression = "Surprised 😲";
-    } else if (frownLeft > 0.005 && frownRight > 0.005) {
+    }
+
+    // Sad
+    else if (frownLeft > 0.001 && frownRight > 0.001) {
       currentExpression = "Sad 😢";
     }
+
     setExpression(currentExpression);
   }
 };
