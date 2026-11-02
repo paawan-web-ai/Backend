@@ -1,0 +1,30 @@
+.player {
+  width: min(760px, calc(100vw - 32px));
+  display: grid;
+  grid-template-columns: 1.1fr 1.5fr auto;
+  align-items: center;
+  gap: 28px;
+  padding: 22px;
+  border: 1px solid rgba(196, 181, 253, 0.18);
+  border-radius: 24px;
+  background: linear-gradient(135deg, rgba(55, 25, 72, 0.95), rgba(26, 19, 52, 0.95));
+  box-shadow: 0 20px 55px rgba(0, 0, 0, 0.35);
+}
+
+.player audio { display: none; }
+.player__song { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.player__song img { width: 76px; height: 76px; object-fit: cover; border-radius: 14px; }
+.player h2 { margin: 3px 0; font-size: 1.1rem; }
+.player__song p { color: #aaa2c1; text-transform: capitalize; font-size: .85rem; }
+.player__eyebrow { color: #c4b5fd !important; text-transform: uppercase !important; letter-spacing: .12em; font-size: .65rem !important; }
+.player__actions { display: flex; align-items: center; justify-content: center; gap: 18px; }
+.player button { width: auto; padding: 8px; background: transparent; font-size: 1.35rem; }
+.player button:hover { box-shadow: none; transform: scale(1.08); }
+.player button span { font-size: .65rem; vertical-align: top; }
+.player__play { width: 48px !important; height: 48px; border-radius: 50% !important; background: #8b5cf6 !important; }
+.player__timeline { display: flex; align-items: center; gap: 8px; margin-top: 10px; color: #aaa2c1; font-size: .72rem; }
+.player input[type="range"] { accent-color: #a78bfa; width: 100%; }
+.player__speed { display: flex; flex-direction: column; gap: 6px; color: #aaa2c1; font-size: .72rem; }
+.player select { padding: 7px 8px; border: 1px solid #5b4c80; border-radius: 8px; color: white; background: #291d42; }
+
+@media (max-width: 650px) { .player { grid-template-columns: 1fr auto; } .player__controls { grid-column: 1 / -1; } }
